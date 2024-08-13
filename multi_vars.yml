@@ -1,0 +1,41 @@
+- name: Install apache, start apache, deploy
+  hosts: web
+  become: yes # admin action
+  
+  vars:
+    listen_port: 8080
+    apache_config_path: /etc/httpd/conf/httpd.conf
+    
+    
+
+  tasks:
+    - name: Instal apache
+      dnf:
+        name: httpd
+        state: present
+    - name: Start apache
+      service:
+        name: httpd
+        state: started
+    - name: Enable apache
+      service:
+        name: httpd
+        enabled: on # yes
+    - name: Deploy the static file
+      copy:
+        src: /home/ec2-user/research/index.html
+        dest: /var/www/html/
+    - name: "Modify the port to {{listen_port}}"
+      lineinfile:
+        path: "{{ apache_config_path }}"
+        regexp: '^Listen '
+        insertafter: '^#Listen '
+        line: "Listen {{listen_port}}"
+      notify: 
+        - Restart apache
+      
+  handlers:      
+    - name: Restart apache
+      service:
+        name: httpd
+        state: restarted
