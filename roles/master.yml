@@ -1,0 +1,6 @@
+- name: Understanding the reboot module
+  hosts: web
+  become: yes
+  
+  roles:
+    - role: apache

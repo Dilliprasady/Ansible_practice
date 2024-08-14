@@ -1,0 +1,6 @@
+---
+# tasks file for apache
+- name: Instal apache
+  dnf:
+    name: "{{ package_name }}"
+    state: present 
