@@ -1,0 +1,13 @@
+- name: Installing the package using condition
+  hosts: web
+  become: yes # admin action
+
+  tasks:
+    - name: Creating users
+      user:
+        name: "{{ item }}"
+      loop:
+        - user1
+        - user2
+        - user3
+        - user4

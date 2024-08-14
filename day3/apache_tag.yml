@@ -1,0 +1,42 @@
+- name: Install apache, start apache, deploy
+  hosts: web
+  become: yes # admin action
+
+  tasks:
+    - name: Instal apache
+      dnf:
+        name: httpd
+        state: present
+    - name: Start apache
+      service:
+        name: httpd
+        state: started
+      tags:
+        - start
+    - name: Enable apache
+      service:
+        name: httpd
+        enabled: on # yes
+      tags:
+        - enabled
+    - name: Deploy the static file
+      copy:
+        src: /home/ec2-user/research/index.html
+        dest: /var/www/html/
+      tags:
+        - deploy
+    - name: Modify the port to 8080
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        insertafter: '^#Listen '
+        line: Listen 9090
+      notify:
+        - Restart apache
+
+  handlers:
+    - name: Restart apache
+      service:
+        name: httpd
+        state: restarted
+

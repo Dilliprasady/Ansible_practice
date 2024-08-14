@@ -1,0 +1,15 @@
+- name: Installing the package using condition
+  hosts: web
+  become: yes # admin action
+
+  tasks:
+    - name: Install the httpd in Amazon 2023
+      dnf:
+        name: httpd
+        state: present
+      when: ansible_facts.distribution_major_version == "2023"
+    - name: Install the httpd in Amazon 2
+      yum:
+        name: httpd
+        state: present
+      when: ansible_facts.distribution_major_version == "2"

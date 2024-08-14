@@ -1,0 +1,23 @@
+- name: Installing the package using condition
+  hosts: web
+  become: yes # admin action
+
+  tasks:
+    - name: Installing package in amazon 2023
+      dnf:
+        name: "{{ item }}"
+      loop:
+        - httpd
+        - nginx
+        - docker
+        - zip
+      when: ansible_facts.distribution_major_version == "2023"
+    - name: Installing package in amazon 2
+      yum:
+        name: "{{ item }}"
+      loop:
+        - httpd
+        - nginx
+        - docker
+        - zip
+      when: ansible_facts.distribution_major_version == "2"

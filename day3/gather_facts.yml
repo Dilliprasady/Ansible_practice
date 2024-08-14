@@ -1,0 +1,8 @@
+- name: Gather fact playbook
+  hosts: web
+  become: yes # admin action
+
+  tasks:
+    - name: Gathering the fact/information about the remote server
+      debug:
+        var: ansible_facts
